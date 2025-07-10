@@ -11,9 +11,29 @@ export class UsersService {
     private usersRepo: Repository<User>,
   ) {}
 
-  async create(email: string, password: string): Promise<User> {
+  // create(data: any) {
+  //   return this.usersRepo.save(data);
+  // }
+
+  findAll() {
+    return this.usersRepo.find();
+  }
+
+  findOne(id: number) {
+    return this.usersRepo.findOneBy({ id });
+  }
+
+  update(id: number, data) {
+    return this.usersRepo.update(id, data);
+  }
+
+  remove(id: number) {
+    return this.usersRepo.delete(id);
+  }
+
+  async create(name: string, email: string, password: string): Promise<User> {
     const hashed = await bcrypt.hash(password, 10);
-    const user = this.usersRepo.create({ email, password: hashed });
+    const user = this.usersRepo.create({ name, email, password: hashed });
     return this.usersRepo.save(user);
   }
 

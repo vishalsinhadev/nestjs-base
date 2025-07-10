@@ -14,6 +14,7 @@ async function bootstrap() {
   );
   app.use(json()); 
   const port = process.env.PORT || 3000;
+  console.log(app.getHttpServer()._events.request.toString());
   await app.listen(port);
 }
 bootstrap();
