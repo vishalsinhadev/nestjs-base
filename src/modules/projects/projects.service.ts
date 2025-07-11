@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Project } from './projects.entity';
 import { log } from 'console';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { paginate } from 'src/common/utils/paginate.util';
 
 @Injectable()
 export class ProjectsService {
@@ -16,8 +18,11 @@ export class ProjectsService {
     return this.projectRepo.save(data);
   }
 
-  findAll() {
-    return this.projectRepo.find();
+  findAll(query: PaginationQueryDto) {
+    return paginate(this.projectRepo, query, {
+      order: { id: 'DESC' },
+    });
+    // return this.projectRepo.find();
   }
 
   findOne(id: number) {

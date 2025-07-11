@@ -13,14 +13,12 @@ export class AuthController {
 
   @Post('signup')
   async signup(@Body() body: CreateUserDto) {
-   
     const user = await this.usersService.create(body.name, body.email, body.password);
     return { message: 'User created', user };
   }
 
   @Post('login')
   async login(@Body() body: LoginDto) {
-     console.log('body12', body.email)
     const user = await this.authService.validateUser(body.email, body.password);
     if (!user) throw new UnauthorizedException('Invalid credentials');
     return this.authService.login(user);
