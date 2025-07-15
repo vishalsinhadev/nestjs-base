@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Project } from './projects.entity';
-import { log } from 'console';
-import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { paginate } from 'src/common/utils/paginate.util';
+import { ProjectQueryDto } from './dto/project-query.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -14,15 +13,17 @@ export class ProjectsService {
   ) {}
 
   create(data: any) {
-    log('data123', data)
     return this.projectRepo.save(data);
   }
 
-  findAll(query: PaginationQueryDto) {
+  findAll(query: ProjectQueryDto) {
     return paginate(this.projectRepo, query, {
+      where: {
+        title: ILike(`%${query.search || ''}%`)
+      },
+      relations: ['tasks'],
       order: { id: 'DESC' },
     });
-    // return this.projectRepo.find();
   }
 
   findOne(id: number) {

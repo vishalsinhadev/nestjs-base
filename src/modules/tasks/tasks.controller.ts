@@ -1,12 +1,11 @@
 import { Controller, Get, Post, Patch, Delete, Param, Body, UseGuards, Query } from '@nestjs/common';
-import { ProjectsService } from './projects.service';
+import { TasksService } from './tasks.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { ProjectQueryDto } from './dto/project-query.dto';
-import { IdValidationPipe } from 'src/common/pipes/id-validation.pipe';
+import { TaskQueryDto } from './dto/task-query.dto';
 
-@Controller('projects')
-export class ProjectsController {
-  constructor(private readonly service: ProjectsService) {}
+@Controller('tasks')
+export class TasksController {
+  constructor(private readonly service: TasksService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -15,24 +14,24 @@ export class ProjectsController {
   }
 
   @Get()
-  findAll(@Query() query: ProjectQueryDto) {
+  findAll(@Query() query: TaskQueryDto) {
     return this.service.findAll(query);
   }
 
   @Get(':id')
-  findOne(@Param('id', IdValidationPipe) id: number) {
+  findOne(@Param('id') id: number) {
     return this.service.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id', IdValidationPipe) id: number, @Body() data) {
+  update(@Param('id') id: number, @Body() data) {
     return this.service.update(id, data);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id', IdValidationPipe) id: number) {
+  remove(@Param('id') id: number) {
     return this.service.remove(id);
   }
 }
