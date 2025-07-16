@@ -6,7 +6,11 @@ export class TaskResponseDto {
   id: number;
 
   @Expose()
-  name: string;
+  title: string;
 
-  // add more fields as needed
+  @Expose()
+  description: string;
+
+  @Expose()
+  created_at: Date;
 }

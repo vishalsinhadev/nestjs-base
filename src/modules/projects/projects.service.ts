@@ -4,6 +4,8 @@ import { ILike, Repository } from 'typeorm';
 import { Project } from './projects.entity';
 import { paginate } from 'src/common/utils/paginate.util';
 import { ProjectQueryDto } from './dto/project-query.dto';
+import { ProjectResponseDto } from './dto/project-response.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ProjectsService {
@@ -16,14 +18,20 @@ export class ProjectsService {
     return this.projectRepo.save(data);
   }
 
-  findAll(query: ProjectQueryDto) {
-    return paginate(this.projectRepo, query, {
+  async findAll(query: ProjectQueryDto) {
+    const result = await paginate(this.projectRepo, query, {
       where: {
         title: ILike(`%${query.search || ''}%`)
       },
       relations: ['tasks'],
       order: { id: 'DESC' },
     });
+    return {
+    ...result,
+    data: plainToInstance(ProjectResponseDto, result.data, {
+      excludeExtraneousValues: true,
+    }),
+  };
   }
 
   findOne(id: number) {

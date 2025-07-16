@@ -16,10 +16,10 @@ export class Project {
   state_id: number;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  created_at: Date;
   
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updated_at: Date;
 
   @OneToMany(() => Task, task => task.project, { cascade: true })
   tasks: Task[];

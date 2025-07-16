@@ -10,6 +10,12 @@ export class ProjectResponseDto {
   title: string;
 
   @Expose()
+  description: string;
+
+  @Expose()
+  created_at: Date;
+
+  @Expose()
   @Type(() => TaskResponseDto)
   tasks: TaskResponseDto[];
 }
