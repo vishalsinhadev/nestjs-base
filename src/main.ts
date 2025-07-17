@@ -5,6 +5,7 @@ import { json } from 'express';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { NotFoundFilter } from './common/filters/notfound.filter';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,7 +19,7 @@ async function bootstrap() {
   app.use(json()); 
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new NotFoundFilter());
-
+  
   TypeOrmModule.forRoot({
     synchronize: false, // 👈 prevents schema overwrite
   });

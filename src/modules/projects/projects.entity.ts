@@ -15,6 +15,9 @@ export class Project {
   @Column()
   state_id: number;
 
+  @Column({ nullable: true })
+  image_file: string;
+
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
   

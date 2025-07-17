@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseInterceptors } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
 import { Project } from './projects.entity';
@@ -6,6 +6,8 @@ import { paginate } from 'src/common/utils/paginate.util';
 import { ProjectQueryDto } from './dto/project-query.dto';
 import { ProjectResponseDto } from './dto/project-response.dto';
 import { plainToInstance } from 'class-transformer';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { extname } from 'path';
 
 @Injectable()
 export class ProjectsService {
@@ -13,7 +15,7 @@ export class ProjectsService {
     @InjectRepository(Project)
     private projectRepo: Repository<Project>,
   ) {}
-
+  
   create(data: any) {
     return this.projectRepo.save(data);
   }
