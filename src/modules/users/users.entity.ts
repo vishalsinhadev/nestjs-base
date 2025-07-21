@@ -13,4 +13,10 @@ export class User {
 
   @Column()
   password: string;
+
+  @Column()
+  social_id: string;
+
+  @Column()
+  provider: string;
 }

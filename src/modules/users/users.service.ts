@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
 import * as bcrypt from 'bcryptjs';
+import { NullableType } from 'src/common/utils/types/nullable.type';
 
 @Injectable()
 export class UsersService {
@@ -31,9 +32,10 @@ export class UsersService {
     return this.usersRepo.delete(id);
   }
 
-  async create(name: string, email: string, password: string): Promise<User> {
+  async create(data): Promise<User> {
+    const [name, email, password, social_id, provider] = data;
     const hashed = await bcrypt.hash(password, 10);
-    const user = this.usersRepo.create({ name, email, password: hashed });
+    const user = this.usersRepo.create({ name, email, password: hashed, social_id, provider });
     return this.usersRepo.save(user);
   }
 
@@ -43,5 +45,20 @@ export class UsersService {
       throw new Error('User not found');
     }
     return user;
+  }
+
+  async findBySocialIdAndProvider({
+    social_id,
+    provider,
+  }: {
+    social_id: User['social_id'];
+    provider: User['provider'];
+  }): Promise<NullableType<User>> {
+    return await this.usersRepo.findOne({
+     where:{ 
+      social_id,
+      provider,
+    }
+    });
   }
 }
