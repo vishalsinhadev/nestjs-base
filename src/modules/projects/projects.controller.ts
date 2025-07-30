@@ -6,8 +6,6 @@ import { IdValidationPipe } from 'src/common/pipes/id-validation.pipe';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { extname } from 'path';
 import { diskStorage, MulterError } from 'multer';
-import { log } from 'console';
-import { MulterExceptionFilter } from 'src/common/filters/multer-exception.filter';
 
 @Controller('projects')
 export class ProjectsController {
@@ -15,7 +13,6 @@ export class ProjectsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  // @UseFilters(MulterExceptionFilter)
   
   @UseInterceptors(
     FileInterceptor('image_file', {

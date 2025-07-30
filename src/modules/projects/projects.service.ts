@@ -8,16 +8,24 @@ import { ProjectResponseDto } from './dto/project-response.dto';
 import { plainToInstance } from 'class-transformer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { extname } from 'path';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ProjectCreatedEvent } from 'src/modules/projects/events/project-created.event';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectRepository(Project)
     private projectRepo: Repository<Project>,
+     private eventEmitter: EventEmitter2,
   ) {}
   
-  create(data: any) {
-    return this.projectRepo.save(data);
+  async create(data: any) {
+    const project = await this.projectRepo.save(data);
+    this.eventEmitter.emit(
+      'project.created',
+      new ProjectCreatedEvent(project.id, project.title),
+    );
+    return project;
   }
 
   async findAll(query: ProjectQueryDto) {

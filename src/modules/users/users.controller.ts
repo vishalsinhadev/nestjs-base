@@ -7,7 +7,7 @@ export class UsersController {
   
   @Post()
     create(@Body() data) {
-      return this.service.create(data.name, data.email, data.password);
+      return this.service.create(data);
     }
   
     @Get()
