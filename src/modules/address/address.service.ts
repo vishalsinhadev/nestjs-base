@@ -45,7 +45,7 @@ export class AddressService {
     req: Request,
     dto: CreateUpdateAddressDto,
     id?: number,
-  ): Promise<Address> {
+  ): Promise<Address | null> {
     const userId = getLoggedInUserId(req);
     if (!userId) throw new BadRequestException('Unauthenticated user');
 
@@ -56,20 +56,18 @@ export class AddressService {
 
     if (id) {
       await this.repo.update(id, payload as any);
-      return this.repo.findOne({ where: { id } as any });
+      return this.repo.findOne({ where: { id } });
     }
-
-    const address = this.repo.create(payload as any);
-    return this.repo.save(address);
+    const address = await this.repo.save(payload as any); // return directly, has the ID after save
+    return address;
   }
 
   async get(req: Request, slugOrId: string | number): Promise<Address | null> {
     const userId = getLoggedInUserId(req);
-    const query = this.repo
+    return this.repo
       .createQueryBuilder('addresses')
       .where('addresses.id = :id', { id: slugOrId })
-      .andWhere('addresses.user_id = :userId', { userId });
-
-    return query.getOne();
+      .andWhere('addresses.user_id = :userId', { userId })
+      .getOne();
   }
 }
